@@ -98,7 +98,7 @@
   <!-- 3/7 Days Weather -->
   <div
     v-if="!weatherData"
-    class="shadow-md rounded-3xl bg-custom-black-bg-container h-60 ring-2 ring-zinc-700"
+    class="shadow-md rounded-3xl bg-custom-black-bg-container h-60 ring-2 ring-zinc-700 "
   >
     <br />
     <br /><br /><br />
@@ -109,7 +109,7 @@
 
   <div
     v-else
-    class="shadow-md rounded-3xl bg-custom-black-bg-container pb-1 ring-2 ring-zinc-700"
+    class="shadow-md rounded-3xl bg-custom-black-bg-container pb-1 ring-2 ring-zinc-700 "
   >
     <div class="mx-8 text-white font-Helvetica">
       <!-- Title and toggle switch -->
@@ -142,7 +142,7 @@
       </div>
       <!-- Day elements -->
       <div
-        v-for="day in weatherData.daily"
+        v-for="day in weeklyWeatherData"
         :key="day.dt"
         class="w-5/5 flex items-center justify-normal bg-custom-black-bg-elements rounded-xl mb-2"
       >
@@ -170,7 +170,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, defineProps } from "vue";
+import { ref, defineProps, watch } from "vue";
 
 const props = defineProps(["city", "country", "lat", "lon"]);
 
@@ -206,10 +206,31 @@ const weatherData = await getWeatherData();
 
 //toggle switch in 3-7 days forecast
 const isChecked = ref(false);
+const dayLimit = ref(3);
+const weeklyWeatherData = ref([]);
 
 const handleCheckboxChange = () => {
   isChecked.value = !isChecked.value;
+
+  if (dayLimit.value === 3) {
+    dayLimit.value = 7;
+  } else {
+    dayLimit.value = 3;
+  }
 };
+
+console.log("---before slicing array---");
+if (weatherData) {
+  weeklyWeatherData.value = await Array.from(weatherData.daily).slice(0,dayLimit.value);
+}
+
+watch(
+  () => dayLimit.value,
+  async (newCount, oldCount) => {
+    weeklyWeatherData.value = Array.from(weatherData.daily).slice(0, newCount);
+    console.log(weeklyWeatherData.value);
+  }
+);
 </script>
 
 <style scoped>
