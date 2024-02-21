@@ -80,7 +80,7 @@
       >
         <p class="whitespace-nowrap text-sm">
           {{
-            new Date(hourData.currentTime).toLocaleTimeString("ro-RO", {
+            new Date(hourData.currentTime+(60*60*1000)).toLocaleTimeString("ro-RO", {
               hour: "numeric",
             })
           }}
@@ -96,91 +96,18 @@
   </div>
 
   <!-- 3/7 Days Weather -->
-  <div
-    v-if="!weatherData"
-    class="shadow-md rounded-3xl bg-custom-black-bg-container h-60 ring-2 ring-zinc-700"
-  >
-    <br />
-    <br /><br /><br />
-    <p class="flex justify-center items-center text-2xl">
-      Search for a city to see the forecast for 3 or 7 days!
-    </p>
-  </div>
+  <WeekForecast
+  :weeklyWeatherData="weeklyWeatherData"
+  />
 
-  <div
-    v-else
-    class="shadow-md rounded-3xl bg-custom-black-bg-container pb-1 ring-2 ring-zinc-700"
-  >
-    <div class="mx-8 text-white font-Helvetica">
-      <!-- Title and toggle switch -->
-      <div class="flex justify-between items-baseline mb-3">
-        <h2 class="mb-2 pt-2 text-3xl">Forecast</h2>
 
-        <label class="flex cursor-pointer select-none items-center">
-          <div class="relative z-0">
-            <input
-              type="checkbox"
-              class="sr-only"
-              @change="handleCheckboxChange"
-            />
-            <div
-              class="flex h-8 w-36 rounded-full bg-[#1e1e26] justify-evenly items-center"
-            >
-              <p :class="{ ' text-[#0f2027] ': !isChecked }" class="z-20">
-                3 Days
-              </p>
-              <p :class="{ ' text-[#0f2027] ': isChecked }" class="z-20">
-                7 Days
-              </p>
-            </div>
-            <div
-              :class="{ 'translate-x-full !bg-primary': isChecked }"
-              class="dot absolute z-10 left-2 top-1 h-6 w-16 rounded-full bg-[#c8e9ea] transition"
-            ></div>
-          </div>
-        </label>
-      </div>
-      <!-- Day elements -->
-      <div class="h-44 mb-2 flex-col overflow-y-scroll scrollbar"
-      :class="{ 'scrollbar': isChecked }">
-        <div
-          v-for="day in weeklyWeatherData"
-          :key="day.dt"
-          class="w-5/5 flex items-center justify-normal bg-custom-black-bg-elements rounded-xl mb-2"
-        >
-          <img
-            class="w-[50px] h-[50px] object-cover justify-start"
-            :src="`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`"
-            alt=""
-          />
-          <div class="flex ml-2 flex-1 justify-start items-baseline">
-            <p class="text-xl">{{ Math.round(day.temp.max) }}&deg;</p>
-            <p class="text-sm">/ {{ Math.round(day.temp.min) }}&deg;</p>
-          </div>
-
-          <div class="flex justify-self-end pr-4 items-baseline">
-           <p class=" text-3xl ">{{ new Date(day.dt * 1000).getDate() }}</p> 
-           &nbsp;&nbsp;
-            <p class=" text-xs">
-              {{
-                monthNames[new Date(day.dt * 1000).getMonth()].substring(0, 3)
-              }},
-              {{
-                (date = new Date(day.dt * 1000).toLocaleDateString("en-us", {
-                  weekday: "long",
-                })).substring(0, 3)
-              }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup>
+import WeekForecast from "./WeekForecast.vue";
 import axios from "axios";
 import { ref, defineProps, watch } from "vue";
+
 
 const props = defineProps(["city", "country", "lat", "lon"]);
 
@@ -214,55 +141,22 @@ const getWeatherData = async () => {
 };
 const weatherData = await getWeatherData();
 
-//toggle switch in 3-7 days forecast
-const isChecked = ref(false);
-const dayLimit = ref(3);
+
 const weeklyWeatherData = ref([]);
-const forecastContainer = ref(null);
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
-const handleCheckboxChange = () => {
-  isChecked.value = !isChecked.value;
 
-  if (dayLimit.value === 3) {
-    dayLimit.value = 7;
-  } else {
-    dayLimit.value = 3;
-  }
-};
 
+// 3 to 7 days forecast
 //slicing array for 7 days
 if (weatherData) {
   weeklyWeatherData.value = await Array.from(weatherData.daily).slice(
     1,
-    dayLimit.value + 1
+    8
   );
 }
+console.log("WEEKLY WEATHER DATA")
+console.log(weeklyWeatherData)
 
-//slicing array for 3 days
-watch(
-  () => dayLimit.value,
-  async (newCount, oldCount) => {
-    weeklyWeatherData.value = Array.from(weatherData.daily).slice(
-      1,
-      newCount + 1
-    );
-    console.log(weeklyWeatherData.value);
-  }
-);
 </script>
 
 <style scoped>
@@ -292,58 +186,5 @@ watch(
   border: 3px solid transparent;
   background-clip: content-box;
   background-color: #c8e9ea;
-}
-.masked-overflow {
-  /* scroll bar width, for use in mask calculations */
-  --scrollbar-width: 16px;
-  /* mask fade distance, for use in mask calculations */
-  --mask-height: 20px;
-
-  /* If content exceeds height of container, overflow! */
-  overflow-y: auto;
-
-  /* Our height limit */
-  height: 176;
-
-  /* Need to make sure container has bottom space,
-  otherwise content at the bottom is always faded out */
-  padding-bottom: var(--mask-height);
-  padding-top: 4px;
-
-  /* Keep some space between content and scrollbar */
-  padding-right: 10px;
-
-  /* The CSS mask */
-
-  /* The content mask is a linear gradient from top to bottom */
-  --mask-image-content: linear-gradient(
-    to bottom,
-    transparent,
-    black var(--mask-height),
-    black calc(100% - var(--mask-height)),
-    transparent
-  );
-
-  /* Here we scale the content gradient to the width of the container 
-  minus the scrollbar width. The height is the full container height */
-  --mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
-
-  /* The scrollbar mask is a black pixel */
-  --mask-image-scrollbar: linear-gradient(black, black);
-
-  /* The width of our black pixel is the width of the scrollbar.
-  The height is the full container height */
-  --mask-size-scrollbar: var(--scrollbar-width) 100%;
-
-  /* Apply the mask image and mask size variables */
-  mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
-  mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
-
-  /* Position the content gradient in the top left, and the 
-  scroll gradient in the top right */
-  mask-position: 0 0, 100% 0;
-
-  /* We don't repeat our mask images */
-  mask-repeat: no-repeat, no-repeat;
 }
 </style>
