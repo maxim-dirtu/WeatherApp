@@ -17,7 +17,7 @@
   >
     <div class="mx-8 text-white font-Helvetica">
       <!-- Title and toggle switch -->
-      <div class="flex justify-between items-baseline mb-3">
+      <div class="flex justify-between items-baseline mb-1">
         <h2 class="mb-2 pt-2 text-3xl">Forecast</h2>
 
         <label class="flex cursor-pointer select-none items-center">
@@ -46,17 +46,17 @@
       </div>
       <!-- Day elements -->
       <div
-        class="h-44 mb-2 flex-col overflow-y-scroll scroll-padding"
+        class="h-36 mb-1 flex-col overflow-y-scroll scroll-padding"
         :class="{ scrollbar: isChecked, example: !isChecked }"
       >
         <div
           v-for="day in receivedWeeklyWeatherData"
           :key="day.dt"
-          class="w-5/5 flex items-center justify-normal bg-custom-black-bg-elements rounded-xl mb-2"
+          class="w-5/5 flex items-center justify-normal bg-custom-black-bg-elements rounded-xl mb-2 mr-3"
           @click="handleSingleDayForecast(day)"
         >
           <img
-            class="w-[50px] h-[50px] object-cover justify-start"
+            class="w-[40px] h-[40px] object-cover justify-start"
             :src="`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`"
             alt=""
           />
@@ -165,6 +165,7 @@ const handleSingleDayForecast = (dayData) => {
 
 ::-webkit-scrollbar {
   width: 12px;
+  
 }
 
 ::-webkit-scrollbar-track {

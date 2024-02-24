@@ -31,15 +31,16 @@
         </template>
       </ul>
     </div>
-    <!-- cityView component -->
+    <!-- Forecast components -->
     <div class="pt-4 mb-8 relative z-0">
       <Suspense>
-        <AsyncCityView
+        <ForecastToday
           :key="cityProp"
           :city="cityProp"
           :country="countryProp"
           :lat="latProp"
           :lon="lonProp"
+          @triggerProps="triggerProps"
         />
         <template #fallback>
           <p>Loading...</p>
@@ -50,7 +51,7 @@
 </template>
 
 <script setup>
-import AsyncCityView from "../components/AsyncCityView.vue";
+import ForecastToday from "../components/ForecastToday.vue";
 import { ref } from "vue";
 import axios from "axios";
 import { RouterLink, useRouter } from "vue-router";
@@ -83,14 +84,12 @@ const getSearchResults = () => {
   }, 200);
 };
 
-var cityProp = "";
-var countryProp = "";
-var latProp = "";
-var lonProp = "";
+const cityProp = ref("");
+const countryProp = ref("");
+const latProp = ref("");
+const lonProp = ref("");
 
 const previewCity = (searchResult) => {
-  console.log(searchResult);
-
   const splitArrayCityStateCountry = searchResult.place_name.split(",");
   var country = "";
   var city = splitArrayCityStateCountry[0];
@@ -99,25 +98,11 @@ const previewCity = (searchResult) => {
   } else {
     country = splitArrayCityStateCountry[1];
   }
-  console.log(city, country);
 
-  cityProp = city;
-  countryProp = country.replaceAll(" ", "");
-  latProp = searchResult.geometry.coordinates[1];
-  lonProp = searchResult.geometry.coordinates[0];
-
-  // const lat = ref( searchResult.geometry.coordinates[1]);
-  // let lon = searchResult.geometry.coordinates[0];
-  // country = country.replaceAll(" ", "");
-
-  console.log("after router push");
-  console.log(cityProp, countryProp, latProp, lonProp);
-  console.log(typeof cityProp);
-  console.log(typeof countryProp);
-  console.log(typeof latProp);
-  console.log(typeof lonProp);
-
-  console.log("------data passed through props-----");
+  cityProp.value = city;
+  countryProp.value = country.replaceAll(" ", "");
+  latProp.value = searchResult.geometry.coordinates[1];
+  lonProp.value = searchResult.geometry.coordinates[0];
 
   setTimeout(() => {
     showCityViewComponent.value = true;
@@ -125,4 +110,31 @@ const previewCity = (searchResult) => {
     mapboxSearchResults.value = null;
   }, 200);
 };
+
+//searchbox  it returns the weather
+//data through $emits() in the HomeView component
+
+//saved cities component la click pe un element,
+//va transmite cu $emits() prop-ul pentru oras
+//spre HomeView, iar HomeView il va transmite
+//la searchbox pentru a lua datele
+
+//sau
+
+//savedCities trimite prin provide/inject direct
+//spre searchbox
+
+function triggerProps(props) {
+  
+
+  cityProp.value = props.propCity;
+  countryProp.value = props.propCountry;
+  latProp.value = props.propLat;
+  lonProp.value = props.propLon;
+  console.log("triggerPropsKey emit event inside HomeView");
+  console.log(cityProp);
+
+  //probabil valorile pt props ce se trimit la child component trebuie sa fie ref-uri ca sa fie reactive mereu.
+
+}
 </script>

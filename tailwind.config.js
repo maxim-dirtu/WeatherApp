@@ -4,11 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        "weather-primary": "#1e293b",
-        "weather-secondary": "#004E71",
+        "weather-primary": "#1e1f24",
+        "weather-secondary": "#c8e9ea",
         "logout-button": "#ef4444",
         "custom-black-bg-elements": "#1e1f24",
         "custom-black-bg-container": "#2e2e38",
+        "sidebar-icons": "#78b1b1",
       },
     },
     fontFamily: {
@@ -16,8 +17,9 @@ export default {
       Helvetica: ["Helvetica, sans-serif"],
     },
     container: {
-      padding: {sm: "2rem" , md:"2rem"},
-      center: true,
+      padding: { sm: "1rem", md: "1rem" },
+      md: "max-auto",
+      sm: "max-auto",
     },
     screens: {
       sm: "640px",

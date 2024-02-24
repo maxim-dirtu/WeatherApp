@@ -1,25 +1,33 @@
 <template>
-  <header class="sticky top-0 bg-weather-primary shadow-lg font-Helvetica">
-    <nav
-      class="container flex flex-col sm:flex-row items-center gap-4 text-white pt-3 pb-2"
-    >
-      <RouterLink :to="{ name: 'home' }">
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-sun text-2xl"></i>
-          <p class="text-2xl">Durleshtskii Forecast</p>
-        </div>
-      </RouterLink>
-
-      <div class="flex fap-3 flex-1 justify-end">
-        <i
-          class="fa-solid fa-circle-info text-xl hover:text-weather-secondary duration-150 cursor-pointer px-3"
-          @click="toggleModal"
-        ></i>
-        <i
-          class="fa-solid fa-right-from-bracket text-xl hover:text-logout-button duration-150 cursor-pointer"
-        ></i>
-      </div>
-
+  <div class="pl-6 pr-2">
+    <nav>
+      <ul
+        class="nav__list bg-custom-black-bg-container shadow-xl pt-8 p-4 w-14 h-[92%] mt-6 flex flex-col items-center gap-10 text-2xl rounded-3xl ring-2 ring-zinc-700"
+      >
+            <RouterLink :to="{ name: 'home' }">
+        <li class="nav__item" data-tooltip="Home">
+          <i class="fa-solid fa-house hover:text-sidebar-icons "></i>
+        </li>
+         </RouterLink>
+          <RouterLink :to="{ name: 'notifications' }">
+        <li class="nav__item" data-tooltip="Notifications">
+          <i class="fa-solid fa-bell hover:text-sidebar-icons "></i>
+        </li>
+        </RouterLink>
+        <li class="nav__item" data-tooltip="Settings">
+          <i class="fa-solid fa-gear hover:text-sidebar-icons"></i>
+        </li>
+        <li class="nav__item" data-tooltip="Info">
+          <i class="fa-solid fa-circle-info hover:text-sidebar-icons mt-72"
+           @click="toggleModal"></i>
+        </li>
+        <li class="nav__item" data-tooltip="Log-Out">
+          <i
+            class="fa-solid fa-right-from-bracket hover:text-logout-button "
+          ></i>
+        </li>
+      </ul>
+      <!-- popup iconita info -->
       <BaseModal :modal-active="modalActive" @close-modal="toggleModal">
         <div class="text-black">
           <h1 class="text-2xl mb-1">About:</h1>
@@ -51,7 +59,7 @@
         </div>
       </BaseModal>
     </nav>
-  </header>
+  </div>
 </template>
 
 <script setup>
@@ -63,4 +71,16 @@ const modalActive = ref(null);
 const toggleModal = () => {
   modalActive.value = !modalActive.value;
 };
+
 </script>
+
+<style scoped>
+.nav__item {
+  list-style: none;
+  position: relative;
+}
+i {
+  transition: all 200ms ease-in;
+}
+
+</style>
