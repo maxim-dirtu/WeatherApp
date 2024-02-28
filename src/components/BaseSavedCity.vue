@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-[132px] shadow-md rounded-3xl bg-custom-black-bg-container pb-1 ring-2 ring-zinc-700 flex flex-col items-center my-1 px-8 py-2">
+  <div class="relative w-[132px] shadow-md rounded-3xl bg-custom-black-bg-container pb-1 ring-2 ring-zinc-700 flex flex-col items-center my-1 px-8 pt-2">
     <div
         class="-mt-5 dot absolute z-10 h-7 w-7 rounded-full bg-[#285e60] "
       > <img
@@ -11,7 +11,7 @@
     <p class="text-xs mb-2">{{ props.country }}</p>
     <div class="pt-3 flex flex-row items-baseline">
         <p class=" text-3xl mr-2">{{ Math.round(maxTemp) }}&deg;</p>
-        <p class=" text-sm mb-2">/{{ Math.round(minTemp) }}&deg;</p>
+        <p class=" text-sm mb-1">/{{ Math.round(minTemp) }}&deg;</p>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!weatherData"
-    class="shadow-md rounded-3xl bg-custom-black-bg-container h-[200px] mb-4 ring-2 ring-zinc-700"
+    class="shadow-md rounded-3xl bg-custom-black-bg-container h-[200px] mb-6 ring-2 ring-zinc-700"
   >
     <br />
     <br /><br /><br />
@@ -12,7 +12,7 @@
   <!-- weather forecast container -->
   <div
     v-else
-    class="shadow-md rounded-3xl bg-custom-black-bg-container mb-4 ring-2 ring-zinc-700"
+    class="shadow-md rounded-3xl bg-custom-black-bg-container mb-6 ring-2 ring-zinc-700"
     :key="componentKey"
   >
     <!-- div for icon + weather data -->

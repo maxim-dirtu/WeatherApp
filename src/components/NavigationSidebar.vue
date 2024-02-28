@@ -14,9 +14,11 @@
           <i class="fa-solid fa-bell hover:text-sidebar-icons "></i>
         </li>
         </RouterLink>
+        <RouterLink :to="{ name: 'settings' }">
         <li class="nav__item" data-tooltip="Settings">
           <i class="fa-solid fa-gear hover:text-sidebar-icons"></i>
         </li>
+        </RouterLink>
         <li class="nav__item" data-tooltip="Info">
           <i class="fa-solid fa-circle-info hover:text-sidebar-icons mt-72"
            @click="toggleModal"></i>

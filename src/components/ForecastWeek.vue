@@ -2,7 +2,7 @@
   <!-- 3/7 Days Weather -->
   <div
     v-if="receivedArrayLength == '0'"
-    class="shadow-md rounded-3xl bg-custom-black-bg-container h-60 ring-2 ring-zinc-700"
+    class="shadow-md rounded-3xl bg-custom-black-bg-container mb-1 h-52 ring-2 ring-zinc-700"
   >
     <br />
     <br /><br /><br />
@@ -13,9 +13,15 @@
 
   <div
     v-else
-    class="shadow-md rounded-3xl bg-custom-black-bg-container pb-1 ring-2 ring-zinc-700"
+    class="shadow-md rounded-3xl bg-custom-black-bg-container mb-1 pb-1 ring-2 ring-zinc-700 text-whte"
   >
-    <div class="mx-8 text-white font-Helvetica">
+    <!-- Single day of the week forecast -->
+    <div v-if="dayClicked" class="mx-8">
+      <ForecastWeekday :selectedDayData=" selectedDayData"
+      @goBackClicked="handleGoBackClick"/>
+    </div>
+    <!-- normal week forecast -->
+    <div v-else class="mx-8 font-Helvetica">
       <!-- Title and toggle switch -->
       <div class="flex justify-between items-baseline mb-1">
         <h2 class="mb-2 pt-2 text-3xl">Forecast</h2>
@@ -53,7 +59,7 @@
           v-for="day in receivedWeeklyWeatherData"
           :key="day.dt"
           class="w-5/5 flex items-center justify-normal bg-custom-black-bg-elements rounded-xl mb-2 mr-3"
-          @click="handleSingleDayForecast(day)"
+          @click="handleWeekdayClicked(day)"
         >
           <img
             class="w-[40px] h-[40px] object-cover justify-start"
@@ -79,7 +85,7 @@
               }}
             </p>
           </div>
-        </div>
+        </div> 
       </div>
     </div>
   </div>
@@ -87,6 +93,7 @@
 
 <script setup>
 import { ref, watch, defineProps } from "vue";
+import ForecastWeekday from "./ForecastWeekday.vue";
 
 const props = defineProps(["weeklyWeatherData"]);
 
@@ -139,21 +146,24 @@ watch(
 //show date from the day near forecast
 //show details of the day instead of days
 
-const showSingleDayForecast = ref(false);
-const selectedDayWeatherData = ref(null);
+const dayClicked = ref(false);
+const selectedDayData = ref({});
 
-const handleSingleDayForecast = (dayData) => {
-  selectedDayWeatherData.value = dayData;
-  showSingleDayForecast.value = !showSingleDayForecast.value;
-    console.log("handle single day forecast-------------");
 
-  console.log(selectedDayWeatherData.value);
-  console.log(showSingleDayForecast.value);
+const handleWeekdayClicked = (dayData) => {
+  console.log(dayData);
+  selectedDayData.value = dayData;
+  dayClicked.value = !dayClicked.value;
+  // console.log("handle single day forecast-------------");
 
+  // console.log(selectedDayData.value);
+  // console.log(dayClicked.value);
+  // console.log(selectedDayData.value.summary)
 };
 
-
-
+const handleGoBackClick=()=>{
+  dayClicked.value = !dayClicked.value;
+}
 
 </script>
 
@@ -165,7 +175,6 @@ const handleSingleDayForecast = (dayData) => {
 
 ::-webkit-scrollbar {
   width: 12px;
-  
 }
 
 ::-webkit-scrollbar-track {
